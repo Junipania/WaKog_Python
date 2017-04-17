@@ -14,6 +14,7 @@ class Screener:
     # Konstruktor des Screeners
     # 'name' enthaelt den Namen als String (Bsp. "Screener 15")
     # 'correct' enthaelt die Antworten als Liste von Zahlen (0: falsch, 1: richtig)
+
     def __init__(self, name, correct):
         self.name = str(name)
         self.correct = list(correct)
@@ -45,30 +46,50 @@ class Screener:
 
     # todo: Berechnung der Hitrate
     def hit_rate(self):
-        num_present=0
-        for entry in self.present:
+        num_hit=0
+        for entry in self.correct:
             if(entry) == 1:
-                num_present +=1
-                print(num_present) # python2: print num_present
-        return num_present
+                num_hit +=1
+                print(num_hit) # python2: print num_present
+        return num_hit / len(self.correct)
 
     # todo: Berechnung der Missrate
     def miss_rate(self):
-        return 0
+        num_miss=0
+        for entry in self.correct:
+            if(entry) == 0:
+                num_miss +=1
+                print(num_miss)
+        return num_miss / len(self.correct)
 
     # todo: Berechnung der False-Alarm-Rate 
     def false_alarm_rate(self):
-        return 0
+        num_fa=0
+        for entry in self.correct:
+            if(entry==0 && 'Target Presence'==1): #Eine neue Liste für die Target_Presence erstellen?
+                num_fa += 1
+                print(num_fa)
+        return num_fa / len(self.correct)
 
     # todo: Berechnung der Correct-Rejection-Rate
     def correct_rejection_rate(self):
-        return 0
+        num_cr=0
+        for entry in self.correct:
+            if(entry==1 && 'Target Presence'==1):
+                num_present += 1
+                print(num_cr)
+        return num_cr / len(self.correct)
 
     # todo: Berechnung der Sensitivity
     def sensitivity(self):
-        return 0
+        rate_far = false_alarm_rate(self)
+        rate_hit = hit_rate(self)
+
+        return rate_hit - rate_far
+            
 
     # todo: Berechnung des Criterion
+    #wie hat man das noch mal gemacht?
     def criterion(self):
         return 0
 
