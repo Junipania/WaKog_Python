@@ -48,7 +48,7 @@ class Screener:
     def hit_rate(self):
         num_hit=0
         for entry in self.correct:
-            if(entry) == 1:
+            if(entry == 1 && 'Target Presence' == 1):
                 num_hit +=1
                 print(num_hit) # python2: print num_present
         return num_hit / len(self.correct)
@@ -57,7 +57,7 @@ class Screener:
     def miss_rate(self):
         num_miss=0
         for entry in self.correct:
-            if(entry) == 0:
+            if(entry == 0 && 'Target Presence' == 1):
                 num_miss +=1
                 print(num_miss)
         return num_miss / len(self.correct)
@@ -66,7 +66,7 @@ class Screener:
     def false_alarm_rate(self):
         num_fa=0
         for entry in self.correct:
-            if(entry==0 && 'Target Presence'==1): #Eine neue Liste für die Target_Presence erstellen?
+            if(entry==0 && 'Target Presence'==0): #Eine neue Liste für die Target_Presence erstellen?
                 num_fa += 1
                 print(num_fa)
         return num_fa / len(self.correct)
@@ -75,7 +75,7 @@ class Screener:
     def correct_rejection_rate(self):
         num_cr=0
         for entry in self.correct:
-            if(entry==1 && 'Target Presence'==1):
+            if(entry==1 && 'Target Presence'==0):
                 num_present += 1
                 print(num_cr)
         return num_cr / len(self.correct)
@@ -91,9 +91,8 @@ class Screener:
     # todo: Berechnung des Criterion
     def criterion(self):
         rate_far = false_alarm_rate(self)
-        rate_hit = hit_rate(self)
 
-        return -0.5*(rate_far + rate_hit)
+        return -(rate_far)
 
     # Signum-Funktion
     def sign(self, x):
