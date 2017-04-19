@@ -46,21 +46,43 @@ class Screener:
 
     # todo: Berechnung der Hitrate
     def hit_rate(self):
+        #num_present = Anz gefährlicher Koffer
+        #num_hit = Anz richtig erkannter gefährlicher Koffer
+        num_present=0
         num_hit=0
-        for entry in self.correct:
+
+        #Abgleichen der Listen
+        for entry in self.present:
+            int counter = 0
             if(entry) == 1:
-                num_hit +=1
-                print(num_hit) # python2: print num_present
-        return num_hit / len(self.correct)
+                num_present += 1
+                if self.correct[counter] == 1:
+                    num_hit +=1
+                    print(num_hit) # python2: print num_present
+            counter += 1
+
+        #Rückgabe Hitrate
+        return num_hit / num_present
 
     # todo: Berechnung der Missrate
     def miss_rate(self):
+    #num_present = Anz gefährlicher Koffer
+        #num_hit = Anz nicht erkannter gefährlicher Koffer
+        num_present=0
         num_miss=0
-        for entry in self.correct:
-            if(entry) == 0:
-                num_miss +=1
-                print(num_miss)
-        return num_miss / len(self.correct)
+
+        #Abgleichen der Listen
+        for entry in self.present:
+            int counter = 0
+            if(entry) == 1:
+                num_present += 1
+                if self.correct[counter] == 0:
+                    num_miss +=1
+                    print(num_miss) # python2: print num_present
+            counter += 1
+
+        #Rückgabe Missrate
+        return num_miss / num_present
 
     # todo: Berechnung der False-Alarm-Rate 
     def false_alarm_rate(self):
