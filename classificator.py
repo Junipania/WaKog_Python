@@ -89,9 +89,11 @@ class Screener:
             
 
     # todo: Berechnung des Criterion
-    #wie hat man das noch mal gemacht?
     def criterion(self):
-        return 0
+        rate_far = false_alarm_rate(self)
+        rate_hit = hit_rate(self)
+
+        return -0.5*(rate_far + rate_hit)
 
     # Signum-Funktion
     def sign(self, x):
