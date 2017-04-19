@@ -86,22 +86,43 @@ class Screener:
 
     # todo: Berechnung der False-Alarm-Rate 
     def false_alarm_rate(self):
+
+        #num_present = Anz ungefährlicher Koffer
+        #num_fa = Anz falscher Alarme
+        num_present=0
         num_fa=0
-        for entry in self.correct:
-            if(entry==0 && 'Target Presence'==1): #Eine neue Liste für die Target_Presence erstellen?
-                num_fa += 1
-                print(num_fa)
-        return num_fa / len(self.correct)
+
+        #Abgleichen der Listen
+        for entry in self.present:
+            int counter = 0
+            if(entry) == 0:
+                num_present += 1
+                if self.correct[counter] == 0:
+                    num_fa +=1
+                    print(num_fa) # python2: print num_present
+            counter += 1
+
+        #Rückgabe Missrate
+        return num_fa / num_present
 
     # todo: Berechnung der Correct-Rejection-Rate
-    def correct_rejection_rate(self):
+        #num_present = Anz ungefährlicher Koffer
+        #num_fa = Anz falscher Alarme
+        num_present=0
         num_cr=0
-        for entry in self.correct:
-            if(entry==1 && 'Target Presence'==1):
-                num_present += 1
-                print(num_cr)
-        return num_cr / len(self.correct)
 
+        #Abgleichen der Listen
+        for entry in self.present:
+            int counter = 0
+            if(entry) == 1:
+                num_present += 1
+                if self.correct[counter] == 1:
+                    num_cr +=1
+                    print(num_fa) # python2: print num_present
+            counter += 1
+
+        #Rückgabe Missrate
+        return num_fa / num_present
     # todo: Berechnung der Sensitivity
     def sensitivity(self):
         rate_far = false_alarm_rate(self)
