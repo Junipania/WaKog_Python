@@ -50,6 +50,7 @@ class Screener:
         #num_hit = Anz richtig erkannter gefährlicher Koffer
         num_present=0
         num_hit=0
+<<<<<<< HEAD
 
         #Abgleichen der Listen
         for entry in self.present:
@@ -63,6 +64,13 @@ class Screener:
 
         #Rückgabe Hitrate
         return num_hit / num_present
+=======
+        for entry in self.correct:
+            if(entry == 1 && 'Target Presence' == 1):
+                num_hit +=1
+                print(num_hit) # python2: print num_present
+        return num_hit / len(self.correct)
+>>>>>>> b1040e9fd360a3e5e59ba50f46dbde9c11100c91
 
     # todo: Berechnung der Missrate
     def miss_rate(self):
@@ -70,6 +78,7 @@ class Screener:
         #num_hit = Anz nicht erkannter gefährlicher Koffer
         num_present=0
         num_miss=0
+<<<<<<< HEAD
 
         #Abgleichen der Listen
         for entry in self.present:
@@ -83,6 +92,13 @@ class Screener:
 
         #Rückgabe Missrate
         return num_miss / num_present
+=======
+        for entry in self.correct:
+            if(entry == 0 && 'Target Presence' == 1):
+                num_miss +=1
+                print(num_miss)
+        return num_miss / len(self.correct)
+>>>>>>> b1040e9fd360a3e5e59ba50f46dbde9c11100c91
 
     # todo: Berechnung der False-Alarm-Rate 
     def false_alarm_rate(self):
@@ -91,6 +107,7 @@ class Screener:
         #num_fa = Anz falscher Alarme
         num_present=0
         num_fa=0
+<<<<<<< HEAD
 
         #Abgleichen der Listen
         for entry in self.present:
@@ -104,17 +121,29 @@ class Screener:
 
         #Rückgabe Missrate
         return num_fa / num_present
+=======
+        for entry in self.correct:
+            if(entry==0 && 'Target Presence'==0): #Eine neue Liste für die Target_Presence erstellen?
+                num_fa += 1
+                print(num_fa)
+        return num_fa / len(self.correct)
+>>>>>>> b1040e9fd360a3e5e59ba50f46dbde9c11100c91
 
     # todo: Berechnung der Correct-Rejection-Rate
         #num_present = Anz ungefährlicher Koffer
         #num_fa = Anz falscher Alarme
         num_present=0
         num_cr=0
+<<<<<<< HEAD
 
         #Abgleichen der Listen
         for entry in self.present:
             int counter = 0
             if(entry) == 1:
+=======
+        for entry in self.correct:
+            if(entry==1 && 'Target Presence'==0):
+>>>>>>> b1040e9fd360a3e5e59ba50f46dbde9c11100c91
                 num_present += 1
                 if self.correct[counter] == 1:
                     num_cr +=1
@@ -134,9 +163,8 @@ class Screener:
     # todo: Berechnung des Criterion
     def criterion(self):
         rate_far = false_alarm_rate(self)
-        rate_hit = hit_rate(self)
 
-        return -0.5*(rate_far + rate_hit)
+        return -(rate_far)
 
     # Signum-Funktion
     def sign(self, x):
