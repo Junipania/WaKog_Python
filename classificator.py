@@ -46,15 +46,14 @@ class Screener:
 
     # todo: Berechnung der Hitrate
     def hit_rate(self):
-        #num_present = Anz gefährlicher Koffer
-        #num_hit = Anz richtig erkannter gefährlicher Koffer
+        #num_present = Anz gefaehrlicher Koffer
+        #num_hit = Anz richtig erkannter gefaehrlicher Koffer
         num_present=0
         num_hit=0
-        
+        counter = 0
 
         #Abgleichen der Listen
         for entry in self.present:
-            counter = 0
             if(entry) == 1:
                 num_present += 1
                 if self.correct[counter] == 1:
@@ -62,7 +61,7 @@ class Screener:
                     print(num_hit) # python2: print num_present
             counter += 1
 
-        #Rückgabe Hitrate
+        #Rueckgabe Hitrate
         if (num_present != 0):
             return num_hit / num_present
         else:
@@ -70,14 +69,14 @@ class Screener:
 
     # todo: Berechnung der Missrate
     def miss_rate(self):
-    #num_present = Anz gefährlicher Koffer
-        #num_hit = Anz nicht erkannter gefährlicher Koffer
+    #num_present = Anz gefaehrlicher Koffer
+    #num_hit = Anz nicht erkannter gefaehrlicher Koffer
         num_present=0
         num_miss=0
+        counter = 0
 
         #Abgleichen der Listen
-        for entry in self.present:
-            counter = 0
+        for entry in self.present:    
             if(entry) == 1:
                 num_present += 1
                 if self.correct[counter] == 0:
@@ -85,23 +84,23 @@ class Screener:
                     print(num_miss) # python2: print num_present
             counter += 1
 
-        #Rückgabe Missrate
+        #Rueckgabe Missrate
         if (num_present != 0):
             return num_miss / num_present
         else:
             return 0
 
-    # todo: Berechnung der False-Alarm-Rate 
+    # todo: Berechnung der False-Alarm-Rate
     def false_alarm_rate(self):
+    #num_present = Anz ungefaehrlicher Koffer
+    #num_fa = Anz falscher Alarme
 
-        #num_present = Anz ungefährlicher Koffer
-        #num_fa = Anz falscher Alarme
         num_present=0
         num_fa=0
+        counter = 0
 
         #Abgleichen der Listen
         for entry in self.present:
-            counter = 0
             if(entry) == 0:
                 num_present += 1
                 if self.correct[counter] == 0:
@@ -109,7 +108,7 @@ class Screener:
                     print(num_fa) # python2: print num_present
             counter += 1
 
-        #Rückgabe False Alarm Rate
+        #Rueckgabe False Alarm Rate
         if (num_present != 0):
             return num_fa / num_present
         else:
@@ -117,22 +116,22 @@ class Screener:
 
     # todo: Berechnung der Correct-Rejection-Rate
     def correct_rejection_rate(self):
-        #num_present = Anz ungefährlicher Koffer
-        #num_cr = Anz korrekter Zurückweisungen
+        #num_present = Anz ungefaehrlicher Koffer
+        #num_cr = Anz korrekter Zurueckweisungen
         num_present=0
         num_cr=0
+        counter = 0
 
         #Abgleichen der Listen
         for entry in self.present:
-            counter = 0
-            if(entry) == 1:
+            if(entry) == 0:
                 num_present += 1
                 if self.correct[counter] == 1:
                     num_cr +=1
                     print(num_fa) # python2: print num_present
             counter += 1
 
-        #Rückgabe Correct-Rejection-Rate
+        #Rueckgabe Correct-Rejection-Rate
         if (num_present != 0):
             return num_cr / num_present
         else:
@@ -140,19 +139,19 @@ class Screener:
 
     # todo: Berechnung der Sensitivity
     def sensitivity(self):
-        rate_far = Screener.false_alarm_rate(self)
-        rate_hit = Screener.hit_rate(self)
+        rate_far = self.normsinv(self.false_alarm_rate)
+        rate_hit = self.normsinv(self.hit_rate)
         
-        #Rückgabe Sensitivity
+        #Rueckgabe Sensitivity
         return rate_hit - rate_far
             
 
     # todo: Berechnung des Criterion
     def criterion(self):
-        rate_far = Screener.false_alarm_rate(self)
-        rate_hit = Screener.hit_rate(self)
-
-        #Rückgabe Criterion
+        rate_far = self.normsinv(self.false_alarm_rate)
+        rate_hit = self.normsinv(self.hit_rate)
+        
+        #Rueckgabe Criterion
         return -0.5*(rate_far + rate_hit)
 
     # Signum-Funktion
@@ -232,6 +231,31 @@ class Classificator:
                 self.screeners.append(Screener(str(title), self.columns[title]))
 
     # todo: Implementierung der Berechnung von Durchschnittswerten (HR, MR, FAR, CRR) und Darstellung in Matrix-Form
+    def average(self):
+        #hr
+        for screener in self.screeners:
+            av_hr += screener.hit_rate
+        av_hr = av_hr / len(self.screeners)
+
+        #mr
+        for screener in self.screeners:
+            av_mr += screener.miss_rate
+        av_mr = av_mr / len(self.screeners)
+
+        #far
+        for screener in self.screeners:
+            av_far += screener.false_alarm_rate
+        av_far = av_far / len(self.screeners)
+
+        #crr
+        for screener in self.screeners:
+            av_crr += screener.correct_rejection_rate
+        av_crr = av_crr / len(self.screeners)
+
+        # ausgabe in matrix
+        print("%.2f" % av_hr + " * " + "%.2f" % av_crr)
+        print("    *    ")
+        print("%.2f" % av_mr + " * " + "%.2f" % av_far)
 
     # todo: gestalte die Reihenfolge der Screener-Liste in Abhaengigkeit von der Aufgabenstellung
     def rank_screeners(self):
@@ -249,6 +273,9 @@ class Classificator:
 # BEGIN Main Program ------------------------------------------------------------------------------------------------- #
 
 c = Classificator("sdt-data.csv")
+
+c.average
+
 top = c.get_top_five()
 
 for element in top:
