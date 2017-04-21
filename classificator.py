@@ -44,8 +44,8 @@ class Screener:
 
     # todo: Berechnung der Hitrate
     def hit_rate(self):
-        num_present=0
-        num_hit=0
+        num_present=0 
+        num_hit=0 
         #Anz Hits
         for entry, entry2 in zip(self.present, self.correct):
             if int(entry) == int(entry2) == 1 :
@@ -58,23 +58,41 @@ class Screener:
 
     # todo: Berechnung der Missrate
     def miss_rate(self):
-        return 0
+        return 1 - self.hit_rate
 
     # todo: Berechnung der False-Alarm-Rate 
     def false_alarm_rate(self):
-        return 0
+        num_present=0 
+        num_far=0 
+        #Anz False-Alarms
+        for entry, entry2 in zip(self.present, self.correct):
+            if int(entry) == int(entry2) == 0 :
+                num_far +=1
+        #Anz ungefaehrlicher Koffer
+        for entry in self.present:
+            if int(entry) == 0:
+                num_present += 1
+        return num_far / num_present
 
     # todo: Berechnung der Correct-Rejection-Rate
     def correct_rejection_rate(self):
-        return 0
+        return 1 - self.false_alarm_rate
 
     # todo: Berechnung der Sensitivity
     def sensitivity(self):
-        return 0
+        rate_far = self.normsinv(self.false_alarm_rate)
+        rate_hit = self.normsinv(self.hit_rate)
+        
+        #Rueckgabe Sensitivity
+        return rate_hit - rate_far
 
     # todo: Berechnung des Criterion
     def criterion(self):
-        return 0
+        rate_far = self.normsinv(self.false_alarm_rate)
+        rate_hit = self.normsinv(self.hit_rate)
+        
+        #Rueckgabe Criterion
+        return -0.5*(rate_far + rate_hit)
 
     # Signum-Funktion
     def sign(self, x):
@@ -153,16 +171,53 @@ class Classificator:
                 self.screeners.append(Screener(str(title), self.columns[title]))
 
     # todo: Implementierung der Berechnung von Durchschnittswerten (HR, MR, FAR, CRR) und Darstellung in Matrix-Form
+    def average(self):
+        #hr
+        for screener in self.screeners:
+            av_hr += screener.hit_rate
+        av_hr = av_hr / len(self.screeners)
+
+        #mr
+        for screener in self.screeners:
+            av_mr += screener.miss_rate
+        av_mr = av_mr / len(self.screeners)
+
+        #far
+        for screener in self.screeners:
+            av_far += screener.false_alarm_rate
+        av_far = av_far / len(self.screeners)
+
+        #crr
+        for screener in self.screeners:
+            av_crr += screener.correct_rejection_rate
+        av_crr = av_crr / len(self.screeners)
+
+        # ausgabe in matrix
+        print("%.2f" % av_hr + " * " + "%.2f" % av_crr)
+        print("    *    ")
+        print("%.2f" % av_mr + " * " + "%.2f" % av_far)
+
 
     # todo: gestalte die Reihenfolge der Screener-Liste in Abhaengigkeit von der Aufgabenstellung
-    def rank_screeners(self):
+    def rank_screeners(self, ):
         # die Reihenfolge wird durch eine Sortierweise festgelegt: derzeit wird das Attribut "name" eines
         # Screeners verwendet, um die Liste zu sortieren. Die Sortierung wird durch die Angabe "reverse=True"
         # umgekehrt
-        self.screeners.sort(key=lambda x: x.name, reverse=True)
+        #rank accruacy
+        print("Reihung nach der Accuracy")
+        self.screeners.sort(key=lambda x: x.accuracy, reverse=True)
+        """#rank hit-rate
+        print("Reihung nach der Hit-Rate")
+        self.screeners.sort(key=lambda x: x.hit_rate, reverse=True)
+        #rank false-alarm-rate
+        print("Reihung nach der False-Alarm-Rate")
+        self.screeners.sort(key=lambda x: x.false_alarm_rate)
+        #rank hit-rate and sensitivity
+        print("Reihung nach der Hit-Rate und der Sensititvity")
+        self.screeners.sort(key=lambda x: (x.accuracy, x.hit_rate), reverse=True)"""
 
     def get_top_five(self):
-        return self.screeners[:5]
+        return self.screeners[:15]
 
 # END   Classificator Class ------------------------------------------------------------------------------------------ #
 
